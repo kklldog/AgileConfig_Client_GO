@@ -38,21 +38,38 @@ func main() {
 	stringContent := string(content)
 	fmt.Printf("response: %s\n", stringContent)
 
-	configArray := []config{}
+	var configArray []config
 	err = json.Unmarshal(content, &configArray)
 	if err != nil {
 		log.Fatal("Unmarshal err:", err)
 	}
+
+	configMap := make(map[string]string)
+	for _, x := range configArray {
+		var key = ""
+		if x.Group != "" {
+			key = x.Group + ":" + x.Key
+		} else {
+			key = x.Key
+		}
+
+		configMap[key] = x.Value
+	}
+
 	for {
 		// 读取客户端的消息
-		_, msg, err := c.ReadMessage()
+		var _, msg, err = c.ReadMessage()
 		if err != nil {
 			return
 		}
 
 		// 把消息打印到标准输出
-		fmt.Printf("%s sent: %s\n", c.RemoteAddr(), string(msg))
-
+		fmt.Printf(
+			"%s sent: %s\n",
+			c.RemoteAddr(),
+			string(msg),
+		)
 	}
+
 	defer c.Close()
 }
