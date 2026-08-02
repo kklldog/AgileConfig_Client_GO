@@ -1,4 +1,4 @@
-module Go.AgileConfig.Client
+module github.com/kklldog/AgileConfig_Client_GO
 
 go 1.17
 
